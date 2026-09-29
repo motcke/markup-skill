@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{PROJECT}}</title>
+<script>try{const t=localStorage.getItem("markup:theme");if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+<link rel="stylesheet" href="/_/plan.css">
+{{EXT_HEAD}}
+{{ICON_TAGS}}
+<style>
+  .home { max-width: 960px; margin: 0 auto; padding: 32px 24px 48px; }
+  .home-head { display: flex; align-items: center; gap: 20px; }
+  .home-logo { width: 96px; height: 96px; border-radius: 20px; object-fit: contain; flex: none; }
+  .home h1 { margin: 0 0 2px; font-size: 28px; }
+  .home .root { color: var(--muted); font-size: 13px; direction: ltr; text-align: start; unicode-bidi: isolate; overflow-wrap: anywhere; }
+  .home .intro { color: var(--muted); margin: 18px 0 0; font-size: 15px; }
+  .home .gone { margin: 12px 0 0; padding: 10px 14px; border-radius: 8px; background: var(--c-fef3c7, #fef3c7); color: var(--c-92400e, #92400e); font-size: 14px; }
+  .home .gone[hidden] { display: none; }
+  .plans { margin-top: 20px; display: grid; gap: 10px; }
+  .plan { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: center; background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 18px; }
+  .plan:hover { border-color: var(--line-strong); }
+  .plan a.name { font-size: 18px; font-weight: 600; text-decoration: none; color: var(--ink); }
+  .plan a.name:hover { color: var(--accent); }
+  .plan .meta { color: var(--muted); font-size: 13px; margin-top: 4px; display: flex; gap: 6px 14px; flex-wrap: wrap; align-items: center; }
+  .plan .dir { font-family: var(--mono); direction: ltr; unicode-bidi: isolate; }
+  .plan .counts { display: inline-flex; gap: 6px; }
+  /* delete stays out of the way: visible on hover or keyboard focus of its row only */
+  .plan .del { opacity: 0; transition: opacity .15s; display: inline-flex; align-items: center; gap: 4px; }
+  .plan:hover .del, .plan:focus-within .del { opacity: 1; }
+  @media (hover: none) { .plan .del { opacity: 1; } }
+  .empty { color: var(--muted); padding: 40px; text-align: center; border: 1px dashed var(--line-strong); border-radius: var(--radius); }
+  .empty code { direction: ltr; unicode-bidi: isolate; }
+  .brand { display: flex; align-items: center; gap: 8px; margin-top: 36px; color: var(--muted); font-size: 13px; }
+  .brand img { width: 22px; height: 22px; }
+  .brand a { color: inherit; }
+  .theme-btn { position: fixed; top: 14px; inset-inline-end: 16px; }
+  /* a report to markup itself (Mode: issue): the link beside the version, the form below it */
+  .brand .report-link { margin-inline-start: auto; display: inline-flex; align-items: center; gap: 6px; background: none; border: 0; font: inherit; color: var(--muted); cursor: pointer; padding: 2px 6px; border-radius: 4px; }
+  .brand .report-link:hover { color: var(--accent); background: var(--accent-bg); }
+  .gh-issue { display: inline-block; width: 12px; height: 12px; border: 2px solid currentColor; border-radius: 50%; background: radial-gradient(circle, currentColor 0 2px, transparent 2.5px); box-sizing: border-box; }
+  .report { margin-top: 12px; background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; display: grid; gap: 10px; }
+  .report[hidden] { display: none; }
+  .report h2 { margin: 0; font-size: 16px; }
+  .report .types { display: flex; flex-wrap: wrap; gap: 6px; }
+  .report .types button { font: inherit; font-size: 13px; padding: 1px 10px; border: 1px solid var(--line-strong); border-radius: 999px; background: var(--paper); color: var(--ink); cursor: pointer; }
+  .report .types button[aria-checked="true"] { background: var(--accent); border-color: var(--accent); color: var(--c-ffffff); }
+  .report input, .report textarea { font: inherit; width: 100%; box-sizing: border-box; padding: 6px 10px; border: 1px solid var(--line-strong); border-radius: 6px; background: var(--paper); color: var(--ink); }
+  .report textarea { min-height: 110px; resize: vertical; }
+  .report .acts { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .report .note, .report .msg { margin: 0; font-size: 13px; color: var(--muted); }
+</style>
+</head>
+<body>
+<button id="themeBtn" class="btn theme-btn" type="button"></button>
+<main class="home">
+  <div class="home-head">
+    {{HOME_ICON}}
+    <div>
+      <h1>{{PROJECT}}</h1>
+      <div class="root">{{ROOT}}</div>
+    </div>
+  </div>
+  <p class="intro" id="intro"></p>
+  <p class="gone" id="gone" hidden></p>
+  <div class="plans" id="plans"></div>
+  <div class="brand"><img src="/markup-logo.svg" alt=""><span><a href="https://github.com/{{REPO}}" target="_blank" rel="noopener">markup</a> <span id="ver"></span></span><button type="button" class="report-link" id="reportOpen"><span class="gh-issue" aria-hidden="true"></span> <span id="reportOpenTxt"></span></button></div>
+  <form class="report" id="report" hidden>
+    <h2 id="reportTitle"></h2>
+    <div class="types" role="radiogroup" id="reportTypes"></div>
+    <input id="reportSubject" type="text" dir="auto" maxlength="200">
+    <textarea id="reportBody" dir="auto"></textarea>
+    <div class="acts"><button type="button" class="btn primary small" id="reportAgent"></button><a class="btn small" id="reportGh" target="_blank" rel="noopener" href="https://github.com/{{REPO}}/issues/new"></a><button type="button" class="btn small" id="reportCancel"></button></div>
+    <p class="note" id="reportNote"></p>
+    <p class="msg" id="reportMsg" hidden></p>
+  </form>
+</main>
+<script>
+(async () => {
+  const HE = {
+    intro: 'הדפים שהסוכן כתב בפרויקט הזה. פתח דף כדי לקרוא אותו ולהעיר עליו.',
+    gone: 'הדף {dir} כבר לא קיים בפרויקט הזה (אולי נמחק). הנה כל הדפים:',
+    empty: 'אין עדיין דפים בפרויקט הזה. הקלד <code>/markup</code> בסשן עם הסוכן, והדף הראשון יופיע כאן.',
+    loading: 'טוען…', down: 'השרת לא זמין. הקלד <code>/markup open</code> בסשן כדי להפעיל אותו.',
+    updated: 'עודכן', versions: (n) => (n === 1 ? 'גרסה אחת' : `${n} גרסאות`),
+    open: (n) => `${n} ממתינות לסוכן`, waiting: (n) => `${n} ממתינות לך`, closed: (n) => `${n} סגורות`,
+    del: 'מחק', confirmDel: (t) => `למחוק את "${t}" כולל ההערות וההיסטוריה שלו? אי אפשר לבטל.`,
+    dark: 'מצב כהה', light: 'מצב בהיר',
+    updTitle: 'גרסה חדשה של markup:', updInstalled: 'מותקנת אצלך', updNotes: 'מה חדש', updNow: 'שדרג', updCopy: 'העתק פקודה', updLater: 'לא עכשיו',
+    updModified: (n, cmd) => `שינית ${n} קבצים של הסקיל. השדרוג עובר דרך הסוכן, שימזג את השינויים שלך ויבקש אישור: <code>${cmd}</code>`,
+    updDev: (cmd) => `זה checkout של git: <code class="upd-cmd">${cmd}</code>`,
+    copied: 'הועתק', upgrading: 'משדרג…', failed: 'השדרוג נכשל:', restarting: 'שודרג. השרת עולה מחדש…', reload: 'שודרג. רענן את הדף.',
+    report: 'דיווח על תקלה או רעיון ל-markup', reportTitle: 'דיווח ל-markup', subject: 'כותרת קצרה', body: 'מה קרה ומה ציפית שיקרה, או מה היית רוצה שיתווסף…',
+    toAgent: 'העתק לסוכן', toGh: 'פתח ב-GitHub', cancel: 'ביטול', types: { bug: 'באג', feature: 'שדרוג', question: 'שאלה', other: 'אחר' },
+    reportNote: 'מומלץ דרך הסוכן: הוא ינסח issue עם כל הפרטים, יציג לך טיוטה ויפתח אותו רק אחרי שתאשר. "העתק לסוכן" מעתיק פקודה, הדבק אותה בסשן של הסוכן.',
+    reportCopied: 'הועתק. הדבק בסשן של הסוכן.', reportEmpty: 'כתוב קודם מה לדווח.',
+  };
+  const EN = {
+    intro: 'Pages your agent wrote for this project. Open one to read it and leave comments.',
+    gone: 'The page {dir} no longer exists in this project (it may have been deleted). Here are all its pages:',
+    empty: 'No pages in this project yet. Type <code>/markup</code> in a session with your agent, and the first one shows up here.',
+    loading: 'Loading…', down: 'The server is not running. Type <code>/markup open</code> in the session to start it.',
+    updated: 'updated', versions: (n) => (n === 1 ? '1 version' : `${n} versions`),
+    open: (n) => `${n} waiting for the agent`, waiting: (n) => `${n} waiting for you`, closed: (n) => `${n} closed`,
+    del: 'Delete', confirmDel: (t) => `Delete "${t}" with its comments and history? This cannot be undone.`,
+    dark: 'Dark mode', light: 'Light mode',
+    updTitle: 'New markup version:', updInstalled: 'Installed', updNotes: 'What\'s new', updNow: 'Upgrade', updCopy: 'Copy command', updLater: 'Not now',
+    updModified: (n, cmd) => `You changed ${n} files of the skill. The upgrade goes through your agent, which merges your changes and asks before writing: <code>${cmd}</code>`,
+    updDev: (cmd) => `This is a git checkout: <code class="upd-cmd">${cmd}</code>`,
+    copied: 'Copied', upgrading: 'Upgrading…', failed: 'Upgrade failed:', restarting: 'Upgraded. The server is restarting…', reload: 'Upgraded. Reload the page.',
+    report: 'Report a bug or idea to markup', reportTitle: 'Report to markup', subject: 'Short title', body: 'What happened and what you expected, or what you would like added…',
+    toAgent: 'Copy for the agent', toGh: 'Open on GitHub', cancel: 'Cancel', types: { bug: 'Bug', feature: 'Feature', question: 'Question', other: 'Other' },
+    reportNote: 'Best through your agent: it writes an issue with every detail, shows you the draft, and files it only after you approve. "Copy for the agent" copies a command; paste it into the agent\'s session.',
+    reportCopied: 'Copied. Paste it into the agent\'s session.', reportEmpty: 'Write what to report first.',
+  };
+  const RTL = new Set(['he', 'ar', 'fa', 'rtl']);
+  const el = document.getElementById('plans');
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  let data = null;
+  try { data = await (await fetch('/api/plans')).json(); } catch { /* shown below */ }
+  // The home page speaks the language most of the project's pages are written in; with no pages
+  // yet, the browser's language.
+  const langs = (data?.plans || []).map((p) => p.lang || 'en');
+  const counted = langs.reduce((m, l) => m.set(l, (m.get(l) || 0) + 1), new Map());
+  const lang = langs.length ? [...counted].sort((a, b) => b[1] - a[1])[0][0] : (navigator.language || 'en').slice(0, 2);
+  const T = lang === 'he' ? HE : EN;
+  document.documentElement.lang = lang;
+  document.documentElement.dir = RTL.has(lang) ? 'rtl' : 'ltr';
+  document.getElementById('intro').textContent = T.intro;
+  // a link to a page that is gone lands here (server: 302 to /?gone=<dir>)
+  const goneDir = new URLSearchParams(location.search).get('gone');
+  if (goneDir) { const g = document.getElementById('gone'); const [a, b] = T.gone.split('{dir}'); const c = document.createElement('code'); c.textContent = goneDir; g.append(a, c, b); g.hidden = false; history.replaceState(null, '', '/'); }
+  // the same form as the page's version menu (plan.js fmtVersion): he-IL wrote 28.09.2026 beside the page's 28/09/2026
+  const fmt = (iso) => { const d = new Date(iso); if (isNaN(d)) return ''; const p2 = (n) => String(n).padStart(2, '0'); return `${p2(d.getDate())}/${p2(d.getMonth() + 1)}/${d.getFullYear()} ${p2(d.getHours())}:${p2(d.getMinutes())}`; };
+  const DARK = document.documentElement.dataset.theme === 'dark' || (document.documentElement.dataset.theme !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches);
+  const tb = document.getElementById('themeBtn');
+  tb.textContent = DARK ? '☀' : '☾'; tb.title = DARK ? T.light : T.dark; tb.setAttribute('aria-label', tb.title);
+  tb.addEventListener('click', () => { try { localStorage.setItem('markup:theme', DARK ? 'light' : 'dark'); } catch { /* private mode */ } location.reload(); });
+  const TRASH = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>';
+  function render(d) {
+    if (!d) { el.innerHTML = `<div class="empty">${T.down}</div>`; return; }
+    const plans = (d.plans || []).slice().sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''));
+    if (!plans.length) { el.innerHTML = `<div class="empty">${T.empty}</div>`; return; }
+    el.innerHTML = plans.map((p) => {
+      const c = p.counts || {};
+      // only what is there: a zero count says nothing
+      const badges = [c.waiting ? `<span class="badge info">${esc(T.waiting(c.waiting))}</span>` : '', c.open ? `<span class="badge warn">${esc(T.open(c.open))}</span>` : '', c.closed ? `<span class="badge muted">${esc(T.closed(c.closed))}</span>` : ''].join('');
+      return `<div class="plan" data-dir="${esc(p.dir)}">
+        <div>
+          <a class="name" href="/${esc(p.dir)}/" dir="auto">${esc(p.title)}</a>
+          <div class="meta">
+            <span>${esc(T.updated)} ${esc(fmt(p.updatedAt))}</span>
+            <span>${esc(T.versions(p.versions))}</span>
+            ${badges ? `<span class="counts">${badges}</span>` : ''}
+            <span class="dir">${esc(p.dir)}</span>
+          </div>
+        </div>
+        <button class="btn danger-ghost del" data-del="${esc(p.dir)}" data-title="${esc(p.title)}" type="button" aria-label="${esc(T.del)}: ${esc(p.title)}">${TRASH}<span>${esc(T.del)}</span></button>
+      </div>`;
+    }).join('');
+  }
+  render(data);
+  el.addEventListener('click', async (e) => {
+    const b = e.target.closest('[data-del]');
+    if (!b) return;
+    if (!confirm(T.confirmDel(b.dataset.title || b.dataset.del))) return;
+    await fetch(`/api/plans/${encodeURIComponent(b.dataset.del)}`, { method: 'DELETE' });
+    try { render(await (await fetch('/api/plans')).json()); } catch { render(null); }
+  });
+  // A report to markup itself (Mode: issue). The home page belongs to no session, so the agent path
+  // is a /markup issue command for the clipboard; the other path is GitHub's form, prefilled.
+  const REPO = '{{REPO}}';
+  const ISSUE_LABEL = { bug: 'bug', feature: 'enhancement', question: 'question' };
+  const ISSUE_NAME = { bug: 'Bug', feature: 'Feature request', question: 'Question', other: 'Other' };
+  let markupVersion = '';
+  let rtype = 'bug';
+  const $id = (id) => document.getElementById(id);
+  const form = $id('report');
+  $id('reportOpenTxt').textContent = T.report;
+  $id('reportTitle').textContent = T.reportTitle;
+  $id('reportSubject').placeholder = T.subject;
+  $id('reportBody').placeholder = T.body;
+  $id('reportAgent').textContent = T.toAgent;
+  $id('reportGh').textContent = T.toGh;
+  $id('reportCancel').textContent = T.cancel;
+  $id('reportNote').textContent = T.reportNote;
+  $id('reportTypes').innerHTML = Object.keys(T.types).map((k) => `<button type="button" role="radio" data-type="${k}" aria-checked="${k === rtype}">${esc(T.types[k])}</button>`).join('');
+  $id('reportTypes').addEventListener('click', (e) => { const b = e.target.closest('[data-type]'); if (!b) return; rtype = b.dataset.type; $id('reportTypes').querySelectorAll('button').forEach((x) => x.setAttribute('aria-checked', String(x === b))); });
+  $id('reportOpen').addEventListener('click', () => { form.hidden = !form.hidden; if (!form.hidden) { form.scrollIntoView({ block: 'nearest' }); $id('reportSubject').focus(); } });
+  $id('reportCancel').addEventListener('click', () => { form.hidden = true; });
+  const reportSay = (t) => { const m = $id('reportMsg'); m.hidden = !t; m.textContent = t || ''; };
+  const reportText = () => ({ subject: $id('reportSubject').value.trim(), body: $id('reportBody').value.trim() });
+  $id('reportAgent').addEventListener('click', async () => {
+    const { subject, body } = reportText();
+    if (!subject && !body) { reportSay(T.reportEmpty); return; }
+    const cmd = `/markup issue ${rtype}: ${subject || body.split('\n')[0].slice(0, 80)}${body ? `\n\n${body}` : ''}`;
+    try { await navigator.clipboard.writeText(cmd); reportSay(T.reportCopied); } catch { window.prompt(T.toAgent, cmd); }
+  });
+  // the href is set on click, so the default navigation opens the form with what is in the boxes now
+  $id('reportGh').addEventListener('click', (e) => {
+    const { subject, body } = reportText();
+    let b = body;
+    const env = `\n\n---\n**Type:** ${ISSUE_NAME[rtype]}\n\n| Environment | |\n| --- | --- |\n| markup | ${markupVersion || 'unknown'} |\n| Browser | ${navigator.userAgent} |\n`;
+    const url = () => `https://github.com/${REPO}/issues/new?${new URLSearchParams({ title: subject || body.split('\n')[0].slice(0, 80), body: b + env, ...(ISSUE_LABEL[rtype] ? { labels: ISSUE_LABEL[rtype] } : {}) })}`;
+    while (url().length > 7000 && b.length > 200) b = `${b.slice(0, Math.floor(b.length * 0.8))}\n\n…`;
+    e.currentTarget.href = url();
+  });
+
+  // version under the logo, and the update balloon (V5, 28/09): the plan page's card in short. The
+  // agent path starts from a plan page (the wake lives there), so here a changed install hands the
+  // user the command instead.
+  let u;
+  try { u = await (await fetch('/api/update')).json(); } catch { return; }
+  if (u.current) { document.getElementById('ver').textContent = `v${u.current}`; markupVersion = u.current; }
+  if (!u.available || u.dismissed) return;
+  const box = document.createElement('div');
+  box.className = 'upd-balloon inline';
+  const note = u.kind === 'modified' ? T.updModified(u.modified.length, esc(u.agentCmd)) : u.kind === 'dev' ? T.updDev(esc(u.devCmd)) : '';
+  const act = u.kind === 'clean' ? T.updNow : T.updCopy;
+  box.innerHTML = `<div class="upd-head"><b>${esc(T.updTitle)}</b> <span class="upd-v">${esc(u.latest)}</span></div><div class="upd-sub">${esc(T.updInstalled)}: ${esc(u.current)}</div>${note ? `<p>${note}</p>` : ''}${u.notes ? `<details class="upd-notes"><summary>${esc(T.updNotes)}</summary><div>${esc(u.notes)}</div></details>` : ''}<p class="upd-msg" hidden></p><div class="upd-acts"><button type="button" class="btn primary small" data-upd="go">${esc(act)}</button><button type="button" class="btn small" data-upd="later">${esc(T.updLater)}</button></div>`;
+  const say = (t) => { const m = box.querySelector('.upd-msg'); m.hidden = !t; m.textContent = t; };
+  box.addEventListener('click', async (e) => {
+    const b = e.target.closest('[data-upd]');
+    if (!b) return;
+    if (b.dataset.upd === 'later') { fetch('/api/update/dismiss', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ version: u.latest }) }).catch(() => {}); box.remove(); return; }
+    if (u.kind !== 'clean') { const cmd = u.kind === 'dev' ? u.devCmd : u.agentCmd; try { await navigator.clipboard.writeText(cmd); say(T.copied); } catch { window.prompt(T.updCopy, cmd); } return; }
+    b.disabled = true; say(T.upgrading);
+    let before = null;
+    try { before = (await (await fetch('/api/ping')).json()).startedAt; } catch { /* checked below */ }
+    const r = await fetch('/api/upgrade', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' }).catch((err) => ({ ok: false, json: async () => ({ error: err.message }) }));
+    const body = await r.json().catch(() => ({}));
+    if (!r.ok || !body.ok) { b.disabled = false; say(`${T.failed} ${body.error || r.status}`); return; }
+    say(T.restarting);
+    for (let i = 0; i < 40; i++) {
+      await new Promise((res) => setTimeout(res, 750));
+      try { const pi = await (await fetch('/api/ping')).json(); if (pi.startedAt && pi.startedAt !== before) { location.reload(); return; } } catch { /* restarting */ }
+    }
+    say(T.reload);
+  });
+  const plansEl = document.getElementById('plans');
+  plansEl.parentNode.insertBefore(box, plansEl);
+})();
+</script>
+</body>
+</html>

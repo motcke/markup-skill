@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="{{LANG}}" dir="{{DIR_ATTR}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{TITLE}}</title>
+<script>try{const t=localStorage.getItem("markup:theme");if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+<link id="hljsTheme" rel="stylesheet" href="/vendor/highlight-github.min.css">
+<link rel="stylesheet" href="/_/plan.css">
+{{EXT_HEAD}}
+<style>@page { @top-center { content: "{{TITLE_CSS}}"; font-size: 9pt; color: #666; } @bottom-left { content: "{{PROJECT_CSS}} · {{DATE}}"; font-size: 9pt; color: #666; } }</style>
+<style>:root { --proj-hue: {{HUE}}; }</style>
+{{ICON_TAGS}}
+</head>
+<body>
+<header class="top">
+  <div class="top-inner">
+    <a class="home-link" href="/" title="{{PROJECT}}">{{PROJ_ICON}} <span class="proj-glyph">&#8962;</span> <span>{{PROJECT}}</span></a>
+    <h1 class="title" title="{{TITLE}}">{{TITLE}}</h1>
+    <div id="ctxMeter" class="cmeter" hidden><span class="cmeter-bar"><i></i></span><span class="cmeter-txt"></span></div>
+    <div class="top-actions">
+      <button id="helpBtn" class="btn theme-btn help-btn" type="button">?</button>
+      <button id="themeBtn" class="btn theme-btn" type="button" title=""></button>
+      <select id="versionSel" class="version-sel" aria-label="versions"></select>
+      <div id="topFilters" class="top-filters"></div>
+      <button id="qCount" class="btn small q-count" type="button" hidden></button>
+      <span id="agentStatus" class="astatus" hidden><span class="astatus-txt"></span><button class="astatus-act btn primary" type="button" hidden></button><button class="astatus-act2 btn small" type="button" hidden></button><button class="astatus-x" type="button" title="" hidden>✕</button></span>
+      <button id="panelToggle" class="btn" type="button"><span data-t="comments">הערות</span> <span id="openCount" class="count" hidden></span></button>
+    </div>
+  </div>
+</header>
+
+<div id="banner" class="banner" hidden></div>
+
+<div class="layout" id="layout">
+  <nav class="toc" id="toc" aria-label="toc"></nav>
+  <main class="content" id="content">
+{{CONTENT}}
+  </main>
+  <aside class="panel collapsed" id="panel">
+    <div class="panel-head">
+      <div class="panel-head-row">
+        <strong data-t="comments">הערות</strong>
+        <span class="panel-head-end"><span class="mode-seg" id="modeSeg"><button type="button" data-mode="float"></button><button type="button" data-mode="panel"></button></span><button class="btn small panel-fold" id="panelClose" type="button" title="">&#187;</button></span>
+      </div>
+      <div class="filters" id="filters"></div>
+    </div>
+    <div class="changes" id="changes" hidden></div>
+    <div class="threads" id="threads"></div>
+    <div class="panel-hint" id="panelHint"></div>
+  </aside>
+</div>
+
+<svg id="floatLines" class="float-lines" aria-hidden="true"></svg>
+<svg id="floatLinesTop" class="float-lines float-lines-top" aria-hidden="true"></svg>
+<div id="floats" class="floats" role="region" aria-label="comments"></div>
+
+<div id="ctxMenu" class="ctx" hidden>
+  <button type="button" data-act="comment">&#128172; <span data-t="addComment">הוסף הערה / שאלה</span><kbd>C</kbd></button>
+  <div class="ctx-hint" data-t="ctxNative">Shift + קליק ימני: תפריט הדפדפן</div>
+</div>
+
+<div id="compose" class="compose" hidden></div>
+
+<script>
+window.PLAN = { dir: "{{DIR}}", version: "{{VERSION}}", readonly: {{READONLY}}, lang: "{{LANG}}", repo: "{{REPO}}", markup: "{{MARKUP_VERSION}}" };
+</script>
+<script src="/vendor/mermaid.min.js"></script>
+<script src="/vendor/chart.umd.js"></script>
+<script src="/vendor/highlight.min.js"></script>
+{{EXT_VENDOR}}
+<script src="/_/plan.js"></script>
+{{EXT_SCRIPTS}}
+</body>
+</html>

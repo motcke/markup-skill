@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="140 144 974 974" width="1024" height="1024">
+  <defs>
+    <linearGradient id="tile" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f6f9fe"/><stop offset="1" stop-color="#d2e1fa"/>
+    </linearGradient>
+    <linearGradient id="orbit" gradientUnits="userSpaceOnUse" x1="300" y1="980" x2="980" y2="330">
+      <stop offset="0" stop-color="#2cc7b0"/><stop offset="1" stop-color="#8b6cf6"/>
+    </linearGradient>
+    <linearGradient id="head" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2f80f2"/><stop offset="1" stop-color="#1767e6"/>
+    </linearGradient>
+    <linearGradient id="body" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#eef3fc"/>
+    </linearGradient>
+    <linearGradient id="bar0" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3fd6bf"/><stop offset="1" stop-color="#14b8a6"/>
+    </linearGradient>
+    <linearGradient id="bar1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2a7cf2"/><stop offset="1" stop-color="#1060e4"/>
+    </linearGradient>
+    <linearGradient id="bar2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#9b7bf8"/><stop offset="1" stop-color="#6d3ff0"/>
+    </linearGradient>
+    <linearGradient id="orange" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffc414"/><stop offset="1" stop-color="#ff7300"/>
+    </linearGradient>
+    <linearGradient id="dot1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#b4a0fb"/><stop offset="1" stop-color="#7c3aed"/>
+    </linearGradient>
+    <linearGradient id="dot2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5eead4"/><stop offset="1" stop-color="#14b8a6"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="14" stdDeviation="16" flood-color="#1d5fd8" flood-opacity=".22"/>
+    </filter>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#0b3c9c" flood-opacity=".25"/>
+    </filter>
+  </defs>
+
+  <!-- tile -->
+  <rect x="148" y="152" width="958" height="958" rx="210" fill="url(#tile)" stroke="#c6d9f7" stroke-width="3"/>
+
+  <!-- orbit -->
+  <g fill="none" stroke="url(#orbit)" stroke-width="15" stroke-linecap="round">
+    <path d="M278 918 C175 830 165 640 300 490"/>
+    <path d="M480 360 C600 225 800 165 921.2 280.8"/>
+    <path d="M1022.2 419.0 A455 392 -40 0 1 1024.3 696.2"/>
+    <path d="M694.6 1015.2 A455 392 -40 0 1 411.2 1011.0"/>
+  </g>
+  <circle cx="981.7" cy="345.0" r="55" fill="url(#dot1)" filter="url(#soft)"/>
+  <circle cx="340.8" cy="974.4" r="50" fill="url(#dot2)" filter="url(#soft)"/>
+
+  <!-- page -->
+  <g transform="translate(270 345) rotate(-4)" filter="url(#shadow)">
+    <rect x="0" y="0" width="607" height="572" rx="36" fill="url(#head)"/>
+    <path d="M0 112 H607 V536 a36 36 0 0 1 -36 36 H36 a36 36 0 0 1 -36 -36 Z" fill="url(#body)"/>
+    <circle cx="74" cy="58" r="22" fill="#ff5f57"/>
+    <circle cx="143" cy="58" r="22" fill="#febc2e"/>
+    <circle cx="212" cy="58" r="22" fill="#28c840"/>
+
+    <!-- table -->
+    <rect x="46" y="154" width="336" height="222" rx="12" fill="#e4eefc"/>
+    <rect x="46" y="154" width="336" height="36" rx="12" fill="#c8ddfa"/>
+    <rect x="46" y="154" width="336" height="222" rx="12" fill="none" stroke="#5c9ff0" stroke-width="14"/>
+    <path d="M46 248 H382 M46 311 H382 M210 154 V376" stroke="#5c9ff0" stroke-width="12"/>
+
+    <!-- bars -->
+    <rect x="42" y="467" width="36" height="60" rx="6" fill="url(#bar0)"/>
+    <rect x="98" y="433" width="40" height="94" rx="6" fill="url(#bar1)"/>
+    <rect x="157" y="402" width="44" height="125" rx="6" fill="url(#bar2)"/>
+
+    <!-- text lines -->
+    <rect x="240" y="421" width="152" height="24" rx="12" fill="#7db3f5"/>
+    <rect x="238" y="467" width="126" height="24" rx="12" fill="#7db3f5"/>
+  </g>
+
+  <!-- pie -->
+  <path d="M775 548 L855 569 A83 83 0 1 1 772 465 Z" fill="#1766e8"/>
+  <path d="M789 536 L792 460 A76 76 0 0 1 864 547 Z" fill="#2cc7b0"/>
+
+  <!-- bubble -->
+  <g transform="rotate(-5 885 800)" filter="url(#shadow)">
+    <path d="M820 652 H950 C1025 652 1075 700 1075 790 C1075 880 1030 935 950 940 L850 946 L712 992 L748 920 C712 895 695 850 695 790 C695 705 745 652 820 652 Z"
+          fill="#fff" stroke="#fff" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M826 676 H946 C1010 676 1050 716 1050 790 C1050 866 1012 910 946 914 L840 922 L740 966 L766 906 C734 884 720 846 720 790 C720 718 762 676 826 676 Z"
+          fill="url(#orange)"/>
+    <g fill="#fff" filter="url(#soft)">
+      <circle cx="808" cy="800" r="27"/>
+      <circle cx="885" cy="800" r="27"/>
+      <circle cx="962" cy="800" r="27"/>
+    </g>
+  </g>
+</svg>
